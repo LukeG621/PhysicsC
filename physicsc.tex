@@ -1,0 +1,1850 @@
+%% PREAMBLE (for distribution or copy-pasting)
+\documentclass{scrartcl}
+%%% Load packages
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames,svgnames]{xcolor}
+\usepackage{hyperref}
+\usepackage{mathrsfs}
+\usepackage[shortlabels]{enumitem}
+\usepackage[obeyFinal,textsize=scriptsize,shadow]{todonotes}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{fullpage}
+\usetikzlibrary{decorations.markings}
+
+%%% Colored sections
+\renewcommand*{\sectionformat}%
+{\color{purple}\S\thesection\enskip}
+\renewcommand*{\subsectionformat}%
+{\color{purple}\S\thesubsection\enskip}
+\renewcommand*{\subsubsectionformat}%
+{\color{purple}\S\thesubsubsection\enskip}
+\KOMAoptions{numbers=noenddot}
+
+%%% Title
+\addtokomafont{subtitle}{\Large}
+\setkomafont{author}{\Large\scshape}
+\setkomafont{date}{\Large\normalsize}
+
+%%% Page setup
+\usepackage[headsepline]{scrlayer-scrpage}
+\renewcommand{\headfont}{}
+\addtolength{\textheight}{3.14cm}
+\setlength{\footskip}{0.5in}
+\setlength{\headsep}{10pt}
+\makeatletter
+\ihead{\footnotesize\textbf{\@author} (\@date)}
+\makeatother
+\automark{section}
+\chead{}
+\makeatletter
+\ohead{\footnotesize\textbf{\@title}}
+\makeatother
+\cfoot{\pagemark}
+
+%%% Macros
+\providecommand{\ol}{\overline}
+\providecommand{\ul}{\underline}
+\providecommand{\wt}{\widetilde}
+\providecommand{\wh}{\widehat}
+\providecommand{\eps}{\varepsilon}
+\providecommand{\half}{\frac{1}{2}}
+\providecommand{\inv}{^{-1}}
+\newcommand{\dang}{\measuredangle} %% Directed angle
+\providecommand{\CC}{\mathbb C}
+\providecommand{\FF}{\mathbb F}
+\providecommand{\NN}{\mathbb N}
+\providecommand{\QQ}{\mathbb Q}
+\providecommand{\RR}{\mathbb R}
+\providecommand{\ZZ}{\mathbb Z}
+\providecommand{\ts}{\textsuperscript}
+\providecommand{\dg}{^\circ}
+\providecommand{\ii}{\item}
+\providecommand{\defeq}{\coloneqq}
+\DeclareMathOperator*{\lcm}{lcm}
+\DeclareMathOperator*{\argmin}{arg min}
+\DeclareMathOperator*{\argmax}{arg max}
+\providecommand{\hrulebar}{\par
+	\hspace{\fill}\rule{0.95\linewidth}{.7pt}\hspace{\fill}
+	\par\nointerlineskip \vspace{\baselineskip}}
+
+%%% Optional colored theorems
+\usepackage{thmtools}
+\usepackage[framemethod=TikZ]{mdframed}
+\mdfdefinestyle{mdbluebox}{%
+	roundcorner=10pt,
+	linewidth=1pt,
+	skipabove=12pt,
+	innerbottommargin=9pt,
+	skipbelow=2pt,
+	linecolor=blue,
+	nobreak=true,
+	backgroundcolor=TealBlue!5,
+}
+\declaretheoremstyle[
+headfont=\sffamily\bfseries\color{MidnightBlue},
+mdframed={style=mdbluebox},
+headpunct={\\[3pt]},
+postheadspace={0pt}
+]{thmbluebox}
+\mdfdefinestyle{mdredbox}{%
+	linewidth=0.5pt,
+	skipabove=12pt,
+	frametitleaboveskip=5pt,
+	frametitlebelowskip=0pt,
+	skipbelow=2pt,
+	frametitlefont=\bfseries,
+	innertopmargin=4pt,
+	innerbottommargin=8pt,
+	nobreak=true,
+	backgroundcolor=Salmon!5,
+	linecolor=RawSienna,
+}
+\declaretheoremstyle[
+headfont=\bfseries\color{RawSienna},
+mdframed={style=mdredbox},
+headpunct={\\[3pt]},
+postheadspace={0pt},
+]{thmredbox}
+\mdfdefinestyle{mdgreenbox}{%
+	skipabove=8pt,
+	linewidth=2pt,
+	rightline=false,
+	leftline=true,
+	topline=false,
+	bottomline=false,
+	linecolor=ForestGreen,
+	backgroundcolor=ForestGreen!5,
+}
+\declaretheoremstyle[
+headfont=\bfseries\sffamily\color{ForestGreen!70!black},
+bodyfont=\normalfont,
+spaceabove=2pt,
+spacebelow=1pt,
+mdframed={style=mdgreenbox},
+headpunct={ --- },
+]{thmgreenbox}
+\mdfdefinestyle{mdblackbox}{%
+	skipabove=8pt,
+	linewidth=3pt,
+	rightline=false,
+	leftline=true,
+	topline=false,
+	bottomline=false,
+	linecolor=black,
+	backgroundcolor=RedViolet!5!gray!5,
+}
+\declaretheoremstyle[
+headfont=\bfseries,
+bodyfont=\normalfont\small,
+spaceabove=0pt,
+spacebelow=0pt,
+mdframed={style=mdblackbox}
+]{thmblackbox}
+
+\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=section]{theorem}
+\declaretheorem[style=thmbluebox,name=Lemma,sibling=theorem]{lemma}
+\declaretheorem[style=thmbluebox,name=Proposition,sibling=theorem]{proposition}
+\declaretheorem[style=thmbluebox,name=Corollary,sibling=theorem]{corollary}
+\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+\declaretheorem[style=thmbluebox,name=Lemma,numbered=no]{lemma*}
+\declaretheorem[style=thmbluebox,name=Proposition,numbered=no]{proposition*}
+\declaretheorem[style=thmbluebox,name=Corollary,numbered=no]{corollary*}
+\declaretheorem[style=thmgreenbox,name=Algorithm,sibling=theorem]{algorithm}
+\declaretheorem[style=thmgreenbox,name=Algorithm,numbered=no]{algorithm*}
+\declaretheorem[style=thmgreenbox,name=Claim,sibling=theorem]{claim}
+\declaretheorem[style=thmgreenbox,name=Claim,numbered=no]{claim*}
+\declaretheorem[style=thmredbox,name=Example,sibling=theorem]{example}
+\declaretheorem[style=thmredbox,name=Example,numbered=no]{example*}
+\declaretheorem[style=thmblackbox,name=Remark,sibling=theorem]{remark}
+\declaretheorem[style=thmblackbox,name=Remark,numbered=no]{remark*}
+
+\theoremstyle{definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{answer}[theorem]{Answer}
+\newtheorem{ques}[theorem]{Question}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem*{conjecture*}{Conjecture}
+\newtheorem*{definition*}{Definition}
+\newtheorem*{fact*}{Fact}
+\newtheorem*{answer*}{Answer}
+\newtheorem*{ques*}{Question}
+\newtheorem*{exercise*}{Exercise}
+\newtheorem*{problem*}{Problem}
+
+\begin{document}
+	\title{AP Physics C}
+	\author{Luke Greenawalt}
+	\maketitle
+	
+	\section{Motion}
+	
+	\subsection{Derivatives in Physics}
+	
+	Derivatives can be thought of in two separate ways: either as the instantaneous rate of change or as the slope of a curve at at a time $t$.
+	
+	\begin{theorem}[Relating Derivatives to Velocity and Acceleration] Given some position function $x(t)$, we have:
+		$$
+		v(t) = \frac{d}{dt} x(t)
+		$$
+		
+		$$
+		a(t) \frac{d}{dt} v(t)
+		$$
+		
+		\noindent Using the second equation of motion as an example, we have:
+		
+		$$
+		x(t) = x_0 + v_{xo} t + \frac{1}{2} at^2 \implies
+		v_x (t) = v_{xo} + at
+		$$
+	\end{theorem}
+	
+	\begin{example}
+		A particle moves along the $x$-axis according to $x(t) = t - 2t^3$. What are the equations for the velocity and acceleration particle? What is the acceleration of the object at $1.00s$ and $3.00s$? What is the average acceleration of the object between $1.00s$ and $3.00s$?
+	\end{example}
+	
+	\paragraph{Solution} Using theorem 1.1, we have:
+	
+	$$
+	v(t) = \frac{d}{dt} (t-2t^3) = 1 - 6t^2
+	$$
+	
+	$$
+	a(t) = \frac{d}{dt} (1-6t^2) = -12t
+	$$
+	
+	\noindent Substituting the $t=1.00s$ and $t=3.00s$ into the acceleration equation, we have:
+	
+	$$
+	a(1) = -12(1) = -12 \frac{m}{s^2} \quad \quad a(3) = -12(3) = -36 \frac{m}{s^2}
+	$$
+	
+	\noindent To find the average acceleration, we must simply find the difference in velocity at the endpoints and then divide by two:
+	
+	$$
+	a = \frac{\Delta v}{t} = \frac{v-v_0}{t} = \frac{v(3) - v(0)}{3-1} = \frac{-48}{2} = -24 \frac{m}{s^2}
+	$$
+	
+	\begin{example}
+		The position of a particle can be found at any time $t$ with the following equation:
+	
+		$$
+		x(t) = t^3 - 8t^2 - 3t
+		$$
+		
+		\noindent (a) How far to the left of zero does the particle go before turning around? (b) What is the particle's largest negative velocity?
+	\end{example}
+	
+	\paragraph{Solution} To find where the particle turns, we must use the equivalent statement and find when the velocity is $0$:
+	
+	$$
+	v(t) = 3t^2-16t-3 \implies 0 =3t^2-16t-3 \implies t = 5.51s
+	$$
+	
+	\noindent To find the $x$-position of the particle at its turning point, we use the position equation with the above $t$ value:
+	
+	$$
+	x(5.51) = -92.1m
+	$$
+	
+	\noindent For part (b), our goal is to maximize $v$. Therefore, we must use $v'(t)$ ($a(t)$) to find the critical point(s):
+	
+	$$
+	a(t) = 6t - 16 \implies 0 = 6t - 16 \implies t = 2.67s
+	$$
+	
+	\noindent Substituting that back into $v(t)$:
+	
+	$$
+	v(2.67) = -24.3 \frac{m}{s}
+	$$
+	
+	\subsection{Integrals in Physics}
+	
+	Integrals are simply a way to find the area under a graph. In physics, we know that the area under the velocity graph is displacement and the area under the acceleration graph is the change in velocity.
+	
+	\begin{theorem}[Relating Integrals to Velocity and Acceleration]
+			Using the snippet above, we have the following:
+			
+			$$
+			x(t) = \int v(t) dt 
+			$$
+			
+			$$
+			v(t) = \int a(t)dt
+			$$
+	\end{theorem}
+	
+	\begin{example}
+		An object starts at $x=10m$. Given a particle's velocity equation of $v(t) = 2t+t^3$, what is the average velocity of the particle between $t=1s$ and $t=2s$?
+	\end{example}
+	
+	\paragraph{Solution} Remember that the average velocity is just $\frac{\Delta x}{\Delta t}$. Therefore, we have:
+	
+	$$
+	x(t) = \int (2t+t^3)dt = \frac{t^4}{4} + t^2 + 10
+	$$
+	
+	\noindent Substituting $t=1$ and $t=2$, we have:
+	
+	$$
+	x(1) = 11.25m \quad \quad x(2) = 18.0m \implies v = \frac{18.0 - 11.25}{2 - 1} = 6.75 \frac{m}{s}
+	$$
+	
+	\begin{example}
+		A particle starts with an initial velocity of $9.00 \frac{m}{s}$ to the left at a position of $x = 4.00m$. Its acceleration equation is:
+		
+		$$
+		a(t) = 8-4t
+		$$
+		
+		\noindent What is the slowest speed this particle travels with?
+	\end{example}
+	
+	\paragraph{Solution} The goal is to find the minimum velocity, which means we have to find the critical points. Therefore, we have:
+	
+	$$
+	0 = 8 - 4t \implies t = 2
+	$$
+	
+	\noindent Since this is the only critical point, I will (lazily) assume that this is where the minimum velocity occurs without checking whether this is a minimum or maximum. Let's now find $v(t)$:
+	
+	$$
+	v(t) = \int a(t) dt = \int (8-4t)dt = 8t - 2t^2 + c
+	$$
+	
+	\noindent We know that $v_0 = -9$, therefore $c = -9$. Finding $v(2)$, we have
+	
+	$$
+	v(2) = 8(2) - 2(4) - 9 = -1 \frac{m}{s}
+	$$
+	
+	\subsection{Unit Vector Notation}
+	
+	A \textbf{unit vector} is a vector that has a magnitude of exactly $1$ (hence the name unit vector) and points in a particular direction. The unit vectors in the positive directions of the $x$, $y$, and $z$ axes are labeled $\vec{i}, \vec{j}$, and $\vec{k}$. These represent the vectors $\langle 1,0, 0 \rangle$, $\langle 0,1,0 \rangle$, and $\langle 0,0,1 \rangle$, respectively. It is helpful to note that unit vectors can technically point in any direction, so there are infinitely many unit vectors assuming infinite precision of angles. 
+	
+	\paragraph{The Tricky $z$ Direction} The $z$ direction adds a third dimension to physics. The positive $z$ direction points out of the page whereas the negative $z$ direction points into the page.
+	
+	\begin{theorem}[Adding and Subtracting Vectors]
+		To add or subtract vectors, you may simply add or subtract the components of the vectors. For instance, given vectors $\vec{u}$ and $\vec{v}$, we can add the two as follows:
+		
+		$$
+		\vec{u}= \langle x_1, y_1, z_1 \rangle \quad \quad \vec{v} = \langle x_2, y_2, z_2 \rangle 
+		$$
+		
+		$$
+		\vec{u} + \vec{v} = \langle x_1, y_1, z_1 \rangle + \langle x_2, y_2, z_2 \rangle = \langle x_1 + x_2, y_1 + y_2, z_1 + z_2 \rangle
+		$$
+		
+		\noindent Likewise, you can subtract $\vec{v}$ from $\vec{u}$ using a similar method:
+		
+		$$
+		\vec{u} - \vec{v} = \langle x_1, y_1, z_1 \rangle - \langle x_2, y_2, z_2 \rangle = \langle x_1 - x_2, y_1 - y_2, z_1 - z_2 \rangle
+		$$
+	\end{theorem}
+	
+	\begin{example}
+		Starting at the origin, a particle moves $7.00 m$ in the positive $x$ direction, $9.00 m$ in the positive $y$ direction, and $12.00m$ in the positive $z$ direction. (a) What is the displacement of the particle, in unit-vector notation? (b) What is the magnitude of the particle's displacement? (c) What angle does the displacement vector make with the $x$ axis?
+	\end{example}
+	
+	\paragraph{Solution} For part (a), we have
+	
+	$$
+	\vec{d} = \vec{p}_\text{final} - \vec{p}_\text{initial} = \langle 7,  9, -12 \rangle - \langle 0,0,0 \rangle = \langle 7, 9, -12 \rangle \implies 7 \vec{i} + 9 \vec{j} - 12 \vec{k}
+	$$
+	
+	\noindent For part (b), we can use the three dimensional Pythagorean theorem:
+	
+	$$
+	\| \vec{d} \| = \sqrt{7^2 + 9^2 + (-12)^2} \approx 16.6 m
+	$$
+	
+	\noindent For part (c), we can ignore the $z$ axis and use right triangle trig:
+	
+	$$
+	\cos \theta = \frac{7}{16.6} \implies \cos^{-1} \left(\frac{7}{16.6} \right) = \theta \implies \theta \approx 65^\circ
+	$$
+	
+	\begin{example}
+		At one moment, a boat has a velocity of $5.00 \frac{m}{s} \vec{i} + 8.00 \vec{j} \frac{m}{s}$. The velocity of the boat $5.00$ seconds later is $2.00 \frac{m}{s} \vec{i} + 14.00 \frac{m}{s} \vec{j}$. What is the average acceleration experienced by the boat (in unit vector notation)?
+	\end{example}
+	
+	\paragraph{Solution} We can break this up into components. First note that $a = \frac{\Delta v}{t}$.
+	
+	$$
+	x: \quad \frac{2 - 5}{5} = -0.6 \frac{m}{s^2}
+	$$
+	
+	$$
+	y: \quad \frac{14-8}{5} = 1.2 \frac{m}{s^2}
+	$$
+	
+	\noindent Therefore, the average acceleration in unit vector notation is $\vec{a} = -0.6 \vec{i} + 1.2 \vec{j}$.
+	
+	\begin{example}
+		A particle starts at the origin at $t=0$ with a velocity of $4.00 \frac{m}{s} \vec{i} + 12.00 \frac{m}{s} \vec{j}$. It moves in the $xy$ plane with a constant acceleration of $2.00 \frac{m}{s^2} \vec{j}$. (a) What is the position of the particle at $t = 5.00s$? (b) How far is the particle from the origin at $t = 5.00s$?
+	\end{example}
+	
+	\paragraph{Solution} Since acceleration is constant, for part (a), we can use the equation of motion format $x = x_0 + v_{x0} t + \frac{1}{2} a_x t^2$:
+	
+	$$
+	r(t) = (0+4t+0) \vec{i} + (0+12t+\frac{1}{2} (2)t^2) \vec{j} = 4t \vec{i} + (12t + t^2) \vec{j}
+	$$
+	
+	$$
+	r(5) = (20 \vec{i} + 85 \vec{j}) m
+	$$
+	
+	\noindent For part (b), we simply must find the magnitude of $r(5)$:
+	
+	$$
+	\| \vec{r}(5) \| = \sqrt{20^2 + 85^2} \approx 87.3 m
+	$$
+	
+	\begin{example}
+		A proton has a position equation of $r(t) = (4t^2) \vec{i} + (t^3 + 9) \vec{j}$ where position is given in meters and time in seconds. What is the velocity of the proton at $t=1.00s$ (in unit vector notation)?
+	\end{example}
+	
+	\paragraph{Solution} \noindent Using the same process as in previous problems, we have:
+	
+	$$v(t) = \frac{dr}{dt} = (8t) \vec{i} + (3t^2) \vec{j}$$
+	
+	$$
+	v(1) = (8 \vec{i} + 3\vec{j}) \frac{m}{s}
+	$$
+	
+	\newpage
+	
+	\section{Electrostatics}
+	
+	\subsection{Charging Methods and the Law of Conservation of Charge}
+	
+	\paragraph{Charging by Friction} The idea with charging by friction is that electrons are being transferred from one object to another. One object gains electrons while the other loses electrons. The entire system, however, does not lose charge due to the Law of Conservation of Charge. Whether or not an object gains or loses electrons depends on the triboelectric series - something that you don't have to worry about for this class. You can only charge insulators by friction. 
+	
+	\paragraph{Charging by Conduction} To charge an object using conduction, the charged objects must be touching one another. One of the objects will gain electrons while the other will lose electrons. If one object is initially uncharged, that object will take on the same type of charge as the charged object. Intuitively, this makes sense. Electrons want to be as far away from each other as they are allowed to be.
+	
+	\paragraph{Charging by Induction} To charge by induction, the objects don't have to be touching. The electrons migrate to or from the object being charged due to the attraction or repulsion of the charged object. The originally uncharged object takes on the opposite type of charge as the charged object.
+	
+	\paragraph{Charging Two Spheres by Conduction} When you charge two spheres by conduction, by definition, they must be touching one another. One sphere will lose electrons and the other sphere will gain electrons. The charge of the system, however, will remain constant. Both spheres will obtain the same type of charge. If the spheres are identical, both spheres will obtain the same magnitude of charge.
+	
+	\subsection{Coulomb's Law}
+	
+	\begin{theorem}[Coulomb's Law]
+			Coulomb's Law is used to determine the electrostatic force between two charged objects. Assuming they have charges of $q_1$ and $q_2$ and a distance of $r$ from the two centers, we have:
+			
+			$$
+			|F_E| = k\frac{|q_1 q_2|}{r^2} \quad \text{ where } k = 9.0 \cdot 10^9 \frac{N \cdot m^2}{C^2}
+			$$
+			
+			\noindent It is important to note that $k$ isn't a fundamental constant. However, we can write $k$ in terms of fundamental constants:
+			
+			$$
+			k = \frac{1}{4\pi \epsilon_0} \implies |F_E| = \frac{1}{4 \pi \epsilon_0} \frac{|q_1 q_2|}{r^2}
+			$$
+			
+			\noindent where $\epsilon_0 = 8.85 \cdot 10^{-12} \frac{C^2}{N \cdot m^2}$ and $\epsilon_0$ represents the vacuum permittivity.
+	\end{theorem}
+	
+	\noindent The lower the vacuum permittivity of a material, the more easily the electric field can form. A vacuum has the lowest permittivity. The permittivity of air is negligibly larger than a vacuum, so we can state that it has the same permittivity.
+	
+	\paragraph{Comparison Between Gravitation and Electrostatics} In gravitation, masses were all attracted to one another. In electrostatics, charges could attract or repel - it depends on the sign. Opposite charges will attract and alike charges will repel.
+	
+	\begin{example}
+		
+		What is the force acting on the $-12.0 \mu C$ charge?
+		\begin{center}
+		\begin{tikzpicture}[font=\small, >=Stealth]
+			
+			\def\dist{4}
+			\def\radius{1}
+			
+			\draw (0,0) circle (\radius);
+			\node at (0,0) {$-12.0\,\mu\text{C}$};
+			
+			\draw (\dist,0) circle (\radius);
+			\node at (\dist,0) {$+14.0\,\mu\text{C}$};
+
+			\draw[dashed] (\radius,0) -- (\dist - \radius,0);
+			
+			\node[above] at (\dist/2,0) {$0.200\,\text{m}$};
+			
+		\end{tikzpicture}
+		\end{center}
+	\end{example}
+	
+	\paragraph{Solution} We can use Coulomb's Law to solve:
+	
+	$$
+	|F_E| = \frac{k(12.0 \cdot 10^{-6})(14.0 \cdot 10^{-6})}{(0.200)^2} = 37.8 N \text { right	}
+	$$
+	
+	\begin{example}
+		What force acts on the middle charge if all charges are positive?
+		\begin{center}
+		\begin{tikzpicture}[font = \small, >=Stealth]
+			\def\dist{8}
+			\def\radius{0.75}
+			
+			\draw (0,0) circle (\radius);
+			\node at (0,0) {$q$};
+			
+			\draw (\dist/2, 0) circle (\radius);
+			\node at (\dist/2,0) {$3q$};
+			
+			\draw (\dist + \dist/2, 0) circle (\radius);
+			\node at (\dist + \dist/2,0) {$2q$};
+			
+			\draw[dashed] (\radius,0) -- (\dist/2 - \radius,0);
+			\node[above] at (\dist/4,0) {$\frac{r}{2}$};
+			
+			\draw[dashed] (\dist/2 + \radius,0) -- (\dist + \dist/2 - \radius, 0);
+			\node[above] at (11\dist/16,0) {$r$};
+		\end{tikzpicture}
+		\end{center}
+	\end{example}
+	
+	\paragraph{Solution} The middle charge will be experiencing a rightward force from the leftmost particle, say $F_1$. It will also be experiencing a leftward force from the rightmost particle, say $F_2$. $F_1$ can be calculated as follows:
+	
+	$$
+	F_1 = \frac{1}{4\pi \epsilon_0} \cdot \frac{3q \cdot q}{\left( \frac{r}{2} \right)^2} = \frac{3q^2}{\pi \epsilon_0 r^2} \text{ in the right direction}
+	$$
+	
+	\noindent $F_2$ can be calculated as follows:
+	
+	$$
+	F_2 = \frac{1}{4 \pi \epsilon_0} \cdot \frac{3q \cdot 2q}{r^2} = \frac{3q^2}{2 \pi \epsilon_0 r^2} \text{ in the left direction}
+	$$
+	
+	\noindent Therefore, the net force is:
+	
+	$$
+	F_1 - F_2 = \frac{3q^2}{2 \pi \epsilon_0 r^2} \text{ right}
+	$$
+	
+	\subsection{Electric Field}
+	
+	\paragraph{What is the Electric Field?} The electric field is the mechanism which causes the electrostatic force. To make it slightly more intuitive, you can compare the relationship between the electrostatic force and the electric field to the relationship between the gravitational force and the gravitational field from mechanics. 
+	
+	\begin{theorem}[Electric Field]
+		The electric field created by a point charge can be calculated as follows:
+		
+		$$
+		E = k \frac{|q|}{r^2} = \frac{1}{4 \pi \epsilon_0} \cdot \frac{|q|}{r^2} \quad \frac{N}{C}
+		$$
+	\end{theorem}
+	
+	\paragraph{Visualizing an Electric Field} While the following diagram isn't the most comprehensive visual of an electric field, you can imagine a simple electric field as the following:
+	
+	\begin{center}
+	\begin{tikzpicture}[>=stealth, thick,
+		mid arrow/.style={postaction={decorate,
+				decoration={markings, mark=at position 0.5 with {\arrow{stealth}}}}}]
+		
+		% Define positions for the charges
+		\def\poscharge{(0,0)}
+		\def\negcharge{(4,0)}
+		
+		% Draw the positive charge
+		\node[draw, circle, fill=red!30, minimum size=1cm] at \poscharge {$+$};
+		
+		% Draw the negative charge
+		\node[draw, circle, fill=blue!30, minimum size=1cm] at \negcharge {$-$};
+		
+		% Draw electric field lines with arrows in the middle
+		% Upper curved field line
+		\draw[mid arrow] \poscharge .. controls (1,2) and (3,2) .. \negcharge;
+		
+		% Upper-mid curved field line
+		\draw[mid arrow] \poscharge .. controls (1,1.2) and (3,1.2) .. \negcharge;
+		
+		% Straight (central) field line
+		\draw[mid arrow] \poscharge -- \negcharge;
+		
+		% Lower-mid curved field line
+		\draw[mid arrow] \poscharge .. controls (1,-1.2) and (3,-1.2) .. \negcharge;
+		
+		% Lower curved field line
+		\draw[mid arrow] \poscharge .. controls (1,-2) and (3,-2) .. \negcharge;
+		
+	\end{tikzpicture}
+	\end{center}
+	
+	\begin{example}
+			Two charges, $a$ and $b$, contribute to the field at point $P$. The charges and point $P$ are located as shown in the diagram. Charge $A$ is $+3 \mu C$ and $B$ is $-4.7 \mu C$. The distance from $P$ to $A$ is $0.450m$ and from $P$ to $B$ is $0.680m$. Find the field (magnitude and direction) at point $P$ created by both charges.
+			
+		\begin{center}
+		\begin{tikzpicture}[
+			scale = 2,
+			x=4cm,             % 1 "unit" in the code = 4 cm horizontally
+			y=4cm,             % 1 "unit" in the code = 4 cm vertically
+			line cap=round,
+			line join=round,
+			font=\small        % set a reasonable font size for all text
+			]
+			\coordinate (P) at (0,0);
+			\coordinate (A) at (0,-0.45);
+			\coordinate (B) at (0.68,0);
+			
+
+			\draw (P) -- (A);
+			\draw (P) -- (B);
+			
+			\fill (P) circle (1pt);
+			\node[above=3pt] at (P) {P};
+			
+
+			\draw[fill=gray!30] (A) circle (3pt);
+			\node at (A) {\scriptsize A}; 
+			\draw[fill=gray!30] (B) circle (3pt);
+			\node at (B) {\scriptsize B};
+			
+		\end{tikzpicture}
+		\end{center}
+	\end{example}
+	
+	\paragraph{Solution} Since charge $A$ is positive, the electric field caused by it will point upward. We can calculate $E_A$ as follows:
+	
+	$$
+	E_A = \frac{1}{4\pi \epsilon_0} \cdot \frac{3 \cdot 10^{-6}}{0.45^2} = 1.33 \cdot 10^5 \frac{N}{C}
+	$$
+	
+	\noindent Charge $B$ is negative, so it will have an electric field pointing right. This field, $E_B$ can be calculated as follows:
+	
+	$$
+	E_B = \frac{1}{4\pi \epsilon_0} \cdot \frac{4.7 \cdot 10^{-6}}{0.68^2} = 9.15 \cdot 10^4 \frac{N}{C}
+	$$
+	
+	\noindent Taken together, these components form a right triangle with a hypotenuse length, $E_\text{tot}$, equal to the magnitude of the electric field and the angle created with the positive $x$-axis, $\theta$, equal to the direction of the field:
+	
+	$$
+	E_\text{tot} = \sqrt{\left( 1.33 \cdot 10^5 \right)^2 + \left( 9.15 \cdot 10^4 \right)^2} = 1.62 \cdot 10^5 \frac{N}{C}
+	$$
+	
+	$$
+	\tan \theta = \frac{1.33 \cdot 10^5}{9.15 \cdot 10^4} \implies \theta \approx 55.5^\circ
+	$$
+	
+	\begin{theorem}[Force in an Electric Field]
+		When you place a charged object in an electric field, it experiences a force:
+		
+		$$
+		|F| = |qE|
+		$$
+		
+		\noindent Positive charges will experience a force in the same direction as the field while negative charges will experience a force in the opposite direction of the field.
+	\end{theorem}
+	
+	\paragraph{Electric Field Between Plates} The electric field between two oppositely charged plates is constant.
+	
+	\begin{center}
+	\begin{tikzpicture}[>=stealth, scale=0.6]
+
+		\draw[ultra thick] (-2, -3) -- (-2, 3);
+		\draw[ultra thick] (2, -3) -- (2, 3);
+		
+		\node at (-2.3, 3) {\large $+$};
+		\node at ( 2.3, 3) {\large $-$};
+		
+		\foreach \y in {-2, -1, 0, 1, 2}
+		{
+			\draw[->, thick, green!70!black] (-1.6, \y) -- (1.6, \y);
+		}
+		
+	\end{tikzpicture}
+	\end{center}
+	
+	\begin{example}
+		An electron $(q = -1.6 \cdot 10^{-19} C, \quad m = 9.11 \cdot 10^{-31} kg)$ experiences an acceleration of $5.25 \cdot 10^{14} \frac{m}{s^2}$ to the right when placed in a uniform electric field. Determine the magnitude and direction of the field.
+	\end{example}
+	
+	\paragraph{Solution} An electron is negatively charged and will move in the opposite direction of the field. Therefore, the field will be pointing left. Now, we can calculate the magnitude of the electric field as follows:
+	
+	$$
+	F = ma = qE \implies E = \frac{ma}{q} = \frac{(9.11 \cdot 10^{-31})(5.25 \cdot 10^{14})}{1.6 \cdot 10^{-19}} = 2990 \frac{N}{C} \text{ left}
+	$$
+	
+	\subsection{Charge Distributions}
+	
+	\paragraph{Finding the Electric Field of a Charged Rod Using Charge Density} The following rod has a total charge of $+Q$ and a constant charge density of $\lambda$.
+	
+	\begin{center}
+	\begin{tikzpicture}[>=stealth, scale=1.6]
+		
+		% Point p
+		\node[left] at (0,0.1) {$p$};
+		\fill (0,0.1) circle (1pt);
+		
+		\draw (1,0) rectangle (5,0.2);
+		
+		\draw[<->] (0,-0.15) -- node[below] {$d$} (1,-0.15);
+	
+		\draw[<->] (1,-0.15) -- node[below] {$L$} (5,-0.15);
+		
+	\end{tikzpicture}
+	\end{center}
+	
+	\noindent We can think of the line of charge $+Q$ being broken down into many infinitely small change in charges $dQ$. Each $dQ$ will supply an electric field $dE$. Each $dQ$ is located a different distance away from point $P$, so we need to find a way to relate $Q$ and $x$.
+	
+	$$
+	dE = \frac{k  \cdot dQ}{x^2}
+	$$
+	
+	\noindent Since the line of charge is uniform, the charge density of the line is constant. Therefore, we have:
+	
+	$$
+	\lambda = \frac{Q}{L} = \frac{dQ}{dx} \implies dQ = \lambda dx
+	$$
+	
+	$$
+	dE = k \cdot \frac{\lambda dx}{x^2} \implies E = k \lambda \int_d^{d+L} \frac{1}{x^2} dx = \frac{Q}{4 \pi \epsilon_0 \cdot d(d+L)}
+	$$
+	
+	\noindent The force that acts on a charge $q$ placed at point $p$ is:
+	
+	$$
+	F = qE = \frac{q \cdot Q}{4\pi \epsilon_0 \cdot d(d+L)}
+	$$
+	
+	\paragraph{Finding the Electric Field of a Charged Ring} We can use a similar process to find the field at point $p$ above a uniform ring of charge $+Q$ and radius $R$.
+	
+	\begin{center}
+	\begin{tikzpicture}[scale=1.6, font=\large]
+		
+		\draw[thick] (0,0) ellipse [x radius=1.4, y radius=0.6];
+		
+		\coordinate (O) at (0,0);
+		\fill (O) circle (1pt);
+		
+		\coordinate (P) at (0,2);
+		\fill (P) circle (1pt);
+		\node[above] at (P) {$p$};
+		
+		\draw[dashed] (P) -- (O);
+		
+		\node[right] at ($(P)!0.5!(O)$) {$z$};
+
+		\coordinate (A) at (1.4,0);
+		\draw[dashed] (O) -- (A);
+		\node[above] at ($(O)!0.5!(A)$) {$R$};
+		
+	\end{tikzpicture}
+	\end{center}
+	
+	\noindent Let's first find the charge density, $\lambda$:
+	
+	$$
+	\lambda = \frac{Q}{2\pi R} = \frac{dQ}{ds} \implies dQ = \lambda ds
+	$$
+	
+	\noindent Using the same logic as in the previous derivation, we can find $E$ using $r$ (the slant height of the cone):
+	
+	$$
+	dE = k \frac{dQ}{r^2} = k \frac{\lambda ds}{r^2}
+	$$
+	
+	\noindent There is symmetry, so only the downward/upward component of the fields are present. All other fields cancel:
+	
+	$$
+	dE = \frac{k \lambda ds}{r^2} \cos \theta \text{ where $\theta$ is the angle between $z$ and the slant height}
+	$$
+	
+	$$
+	\cos \theta = \frac{z}{r} = \frac{z}{\sqrt{R^2+z^2}} 
+	$$
+	
+	$$
+	r^2 = R^2 + z^2 \implies dE = k \cdot \frac{z \lambda ds}{\left( R^2 + z^2 \right)^\frac{3}{2}} \implies E = \frac{k \lambda z}{\left( R^2 + z^2 \right)^\frac{3}{2}} \int_0^{2\pi R} ds
+	$$
+	
+	$$
+	E = \frac{Qz}{4\pi \epsilon_0 \left( R^2 + z^2 \right)^\frac{3}{2}} \implies F = \frac{q \cdot Qz}{4\pi \epsilon_0 \left( R^2 + z^2 \right)^\frac{3}{2}} 
+	$$
+	
+	\subsection{Gauss's Law} 
+	
+	\paragraph{Developing Intuition for Flux} Imagine you are holding a large hula-hoop parallel to the ground on a rainy day. A normal line is a line orthogonal (perpendicular) to the surface of the ring. The rain is parallel to the normal line and orthogonal to the surface. The number of lines passing through the ring is maximized since $\cos 0 = 1$. Imagine tilting the hula-hoop such that the rain is at $30^\circ$ to the normal line. Now, the number of lines passing through is less, since $\cos 30^\circ = \frac{\sqrt{3}}{2} < 1$. Imagine you keep doing this until the hula-hoop, from your perspective, is vertical. Now, the normal line forms an angle of $90^\circ$ with the rain (indicating orthogonality), and since $\cos 90^\circ = 0$, there aren't any rain lines passing through the hula-hoop.
+	
+	\begin{theorem}[Flux]
+		Electric flux is the rate of flow of electric field lines through a surface. It is calculated as follows:
+		
+		$$
+		\Phi = E \cdot \Delta A = E \Delta A \cos \theta = \oint E \cdot dA
+		$$
+		
+		\noindent where $E$ is the electric field vector, and $\Delta A$ is the surface's normal vector.
+	\end{theorem}
+	
+	\begin{example}
+		A uniform $2500 \frac{N}{C}$ electric field that points straight up goes through a $15$ cm by $36$ cm sheet of cardboard that is oriented $60^\circ$ to the field as shown. What is the flux?
+	\end{example}
+	
+	\paragraph{Solution} The normal vector has magnitude:
+	
+	$$
+	\Delta A = (0.15)(0.36) = 0.0540 m^2
+	$$
+	
+	\noindent Therefore, the flux can be calculated as:
+	
+	$$
+	\phi = (2500)(0.0540) \cos 30^\circ = 117 \frac{N \cdot m^2}{C}
+	$$
+	
+	\begin{example}
+		A cylinder is immersed in a uniform electric field of $E$, with the cylinder axis parallel to the field. Prove that the flux through the cylinder is zero.
+	\end{example}
+	
+	\paragraph{Solution} There are 3 $\Delta A$. One for each end cap and then the one for the main surface of the cylinder. The flux through the left end cap is 
+	
+	$$
+	\Phi_\text{left} = E \Delta A \cos 180^\circ = - E \Delta A
+	$$
+	
+	\noindent since the normal vector is pointing in the opposite direction of the field. Likewise, the flux through the right cap is 
+	
+	$$
+	\Phi_\text{right} = E \Delta A \cos 0^\circ = E \Delta A
+	$$
+	
+	\noindent Since the normal vector is in the same direction as the field. The flux through the main surface of the cylinder is zero since every normal vector drawn is orthogonal to the electric field. Thus, the total flux is $- E \Delta A + E \Delta A = 0$.
+	
+	\begin{example}
+		A non-uniform electric field (in $\frac{N}{C}$) given by $E = 3.00x \hat{i} + 4.00 \hat{j}$ pierces the cube shown.  What is the electric flux through the cube?
+		\begin{center}
+			\begin{tikzpicture}[line join=round, line cap=round,
+				% Define a simple 2.5D projection:
+				x={(1cm,0cm)},
+				y={(0.5cm,-0.4cm)},
+				z={(0cm,1cm)}
+				]
+				
+				\draw[thick,->] (0,0,0) -- (4,0,0) node[below left] {$x$};
+				\draw[thick,->] (0,0,0) -- (0,3,0) node[right] {$y$};
+				\draw[thick,->] (0,0,0) -- (0,0,3) node[above left] {$z$};
+				
+				\draw[dashed] (1,0,0) -- (1,-0.3,0);
+				\node[below] at (1,-0.3,-0.1) {1 m};
+				\draw[dashed] (3,0,0) -- (3,-0.3,0);
+				\node[below] at (3,-0.3,0) {3 m};
+				
+				\coordinate (A) at (1,0,0);  
+				\coordinate (B) at (3,0,0);   
+				\coordinate (C) at (3,2,0);  
+				\coordinate (D) at (1,2,0);   
+				
+				\coordinate (E) at (1,0,2);   
+				\coordinate (F) at (3,0,2);   
+				\coordinate (G) at (3,2,2);  
+				\coordinate (H) at (1,2,2);   
+				
+				\draw[fill=blue!30, opacity=0.5] (E) -- (F) -- (G) -- (H) -- cycle; % Back face
+				\draw[fill=blue!30, opacity=0.5] (E) -- (A) -- (D) -- (H) -- cycle; % Left face
+				\draw[fill=blue!30, opacity=0.5] (E) -- (F) -- (B) -- (A) -- cycle; % Bottom face
+				\draw[fill=blue!30, opacity=0.5] (B) -- (F) -- (G) -- (C) -- cycle; % Right face
+				\draw[fill=blue!30, opacity=0.5] (D) -- (C) -- (G) -- (H) -- cycle; % Top face
+				\draw[fill=blue!30, opacity=0.5] (A) -- (B) -- (C) -- (D) -- cycle; % Front face
+				
+				% --- Draw the edges of the box ---
+				\draw[thick] (A) -- (B) -- (C) -- (D) -- cycle;  % Front face edges
+				\draw[thick] (E) -- (F) -- (G) -- (H) -- cycle;  % Back face edges
+				\draw[thick] (A) -- (E); % Left vertical edge
+				\draw[thick] (B) -- (F); % Right vertical edge
+				\draw[thick] (C) -- (G); % Right vertical edge
+				\draw[thick] (D) -- (H); % Left vertical edge
+				
+			\end{tikzpicture}
+		\end{center}
+	\end{example}
+	
+	\paragraph{Solution} We can start with the right face:
+	
+	$$
+	\Phi_\text{right} = \int (3.00 x \hat{i} + 4.0 \hat{j} )dAi = \int 3.0 xdA = \int 9.0 dA = 9.0A = 9.0(4) = 36.0 \frac{N \cdot m^2}{C}
+	$$
+	
+	\noindent Now, the left face:
+	
+	$$
+	\Phi_\text{left} = \int - 3.0 dA = -3A = -12.0 \frac{N \cdot m^2}{C}
+	$$
+	
+	\noindent The front and back faces are both parallel to the fields in the $x$ and $y$ direction, so the normals are $90^\circ$ with the fields. This means there isn't any flux through them. The other faces become slightly more complicated since $x$ is no longer constant. 
+	
+	$$
+	\Phi_\text{top} = \int (3.0 x \hat{i} + 4.0 \hat{j}) \cdot dA \hat{j} = \int 4.0 dA = 4A = 16.0 \frac{N \cdot m^2}{C}
+	$$
+	
+	\noindent The bottom is identical in the opposite direction, so $\Phi_\text{bottom} = -16.0 \frac{N \cdot m^2}{C}$. Therefore, the total flux is $36.0 - 12.0 = 24.0 \frac{N \cdot m^2}{C}$.
+	
+	\paragraph{Gaussian Surface} A Gaussian surface is a hypothetical closed surface that mimics the symmetry of the problem. We can find electric field by looking at the charges that are inside of the Gaussian surface. We can find the charges inside of the Gaussian surface by looking at the electric field lines that go through the Gaussian surface.
+	
+	\begin{theorem}[Gauss's Law]
+		We can relate the flux through a Gaussian surface to the net charge that is enclosed by the surface.
+		
+		$$
+		\Phi = \frac{Q_\text{enc}}{\epsilon_0} = \oint E \cdot dA
+		$$
+		
+		\noindent From the second equivalence, we see that Gauss's Law can also be used to determine the electric field at the Gaussian surface.
+	\end{theorem}
+	
+	\begin{example}
+		A non-conducting sphere of radius $R$ has $+Q$ uniformly distributed throughout its volume. What is the equation for the charge enclosed by any Gaussian sphere of radius $r$, if $r < R$?
+	\end{example}
+	
+	\paragraph{Solution} To solve this problem, we can utilize density:
+	
+	$$
+	\rho = \frac{Q}{\frac{4}{3} \pi R^3} = \frac{Q(r)}{\frac{4}{3} \pi r^3} \implies Q(r) = \frac{Qr^3}{R^3}
+	$$
+	
+	\begin{example}
+		Use Gauss's Law to determine the electric field a distance of $r$ from a charge $+q$.
+	\end{example}
+	
+	\paragraph{Solution} We can utilize the second equality of Gauss's law to solve this problem:
+	
+	$$
+	\oint E \cdot dA = \frac{Q}{\epsilon_0} \implies EA = \frac{q}{\epsilon_0} \implies E(4 \pi r^2) = \frac{q}{\epsilon_0} \implies E = \frac{q}{4 \pi \epsilon_0 r^2}
+	$$
+	
+	\noindent Note that this is just Coulomb's Law!
+	
+	\paragraph{Note on Conductors} A spherical conductor has zero electric field inside of it. The charge on a conductor is located only on the surface, since the electrons need to be as far away from one another as possible. This means any Gaussian surface inside of a conductor encloses zero charge, therefore there is no field. This is true whether the conductor is hollow or not. Outside of a spherical conductor, we can treat the conductor like a point charge, as the conductor acts like a point charge for any point outside of it.
+	
+	\begin{example}
+		A charge of $+q$ is placed inside of an originally neutral conducting thin spherical shells of radius $R$. (a) Find the field for $r > R$. (b) The spherical shell is briefly grounded. What is the field for $r > R$ now.
+	\end{example}
+	
+	\paragraph{Solution} For part (a), the enclosed charge is just $q$. Therefore, we have:
+	
+	$$
+	\oint E \cdot dA = \frac{Q}{\epsilon_0} \implies E = \frac{q}{4 \pi \epsilon_0 r^2}
+	$$
+	
+	\noindent For part (b), Since the spherical shell is grounded, the enclosed charge is now 0.
+	
+	\begin{example}
+		A charge of $-Q$ is placed in the center of a conducting spherical shell that is originally neutral. (a) Find $E$ for $r < R_1$. (b) Find $E$ for $R_1 < r < R_2$. (c) Find $E$ for $r > R_2$.
+	\end{example}
+	
+	\paragraph{Solution} For part (a), we have $E = \frac{-Q}{4 \pi \epsilon_0 r^2}$. For part (b), we must realize that the negative charge in the center creates a polarization of the neutral ring. While the ring as a whole is neutral, the surfaces aren't. The inner surface has a charge of $+Q$ while the outer surface has a charge of $-Q$. Thus, for $R_1 < r < R_2$, the enclosed charge is $0$. Finally, for $r > R_2$, the enclosed charged is simply the center charge and $E = \frac{-Q}{4 \pi \epsilon_0 r^2}$.
+	
+	\begin{example}
+		A solid non-conducting sphere of radius $R$ has a non-uniform charge density of $\rho = br$ where $b$ is a constant and $r$ is the distant from the center of the sphere. (a) What is the total charge of the sphere? (b) What is the electric field at $r < R$? (c) What is the electric field at $r > R$?
+	\end{example}
+	
+	\paragraph{Solution} We can use density again:
+	
+	$$
+	\rho = \frac{Q}{V} = \frac{dQ}{dV} \implies dQ = \rho dV = br(4 \pi r^2dr) = 4 \pi br^3 dr
+	$$
+	
+	$$
+	\int dQ = \int_0^R 4 \pi br^3 dr = \left. \pi br^4 \right|_0^R \implies Q = \pi bR^4
+	$$
+	
+	\noindent Therefore, for any $r < R$, $Q(r) = \pi br^4$. For part (b), we have:
+	
+	$$
+	\oint E \cdot dA = \frac{Q}{\epsilon_0} \implies EA = \frac{Q(r)}{\epsilon_0} \implies E \cdot 4 \pi r^2 = \frac{\pi br^4}{\epsilon_0} \implies E = \frac{br^2}{4 \epsilon_0}
+	$$
+	
+	\noindent For part (c), we have:
+	
+	$$
+	\oint E \cdot dA = \frac{Q}{\epsilon_0} \implies E \cdot 4 \pi r^2 = \frac{\pi b R^4}{\epsilon_0} \implies E = \frac{bR^4}{4 \epsilon_0r^2}
+	$$
+	
+	\begin{example}
+		What is the electric field $r$ meters from an infinitely long line of charge that has a positive linear density $\lambda$?
+	\end{example}
+	
+	\paragraph{Solution} Again, using Gauss's Law, we have:
+	
+	$$
+	\oint E \cdot dA = \frac{Q}{\epsilon_0} \implies EA = \frac{\lambda h}{\epsilon_0} \implies E \cdot 2 \pi r h = \frac{\lambda h}{\epsilon_0}
+	$$
+	
+	$$
+	E = \frac{\lambda}{2 \pi \epsilon_0 r}
+	$$
+	
+	\begin{example}
+		Suppose we have an infinitely large, flat nonconducting sheet that has a constant positive charge density $\sigma$. Find the field a distance of $r$ in front of the sheet.
+	\end{example}
+	
+	\paragraph{Solution} The normal vector will be pointing outward in the same direction as the electric field. Gauss's Law is set up as follows:
+	
+	$$
+	\oint E \cdot dA = \frac{Q}{\epsilon_0} \implies 2EA = \frac{\sigma A}{\epsilon_0} \implies E = \frac{\sigma}{2 \epsilon_0}
+	$$
+	
+	\noindent Therefore, the field is constant no matter how far away you are from the sheet.
+	
+	\begin{example}
+			Suppose that we have two infinitely large parallel plates charged oppositely. What is electric field inside of the plates? What about outside?
+	\end{example}
+	
+	\paragraph{Solution} Inside of the plates, we can treat them as two charged sheets since their electric fields will be going in the same direction. Therefore, $E = 2 \cdot \frac{\sigma}{2 \epsilon_0} = \frac{\sigma}{\epsilon_0}$. Outside of the plates, there is no field since the enclosed charge is $0$.
+	
+	\newpage
+	
+	\section{Electric Potential and Capacitance}
+	
+	\subsection{Electric Potential of Point Charges}
+	
+	When an electrostatic force acts between two or more charged particles within a system of particles, we can assign an electric potential to the system.
+	
+	\begin{center}
+		\begin{tikzpicture}[>=stealth, thick,
+			mid arrow/.style={postaction={decorate,
+					decoration={markings, mark=at position 0.5 with {\arrow{stealth}}}}}]
+
+			\def\poscharge{(0,0)}
+			\def\negcharge{(4,0)}
+			\node[draw, circle, fill=red!30, minimum size=1cm] at \poscharge {$+$};
+			\node[draw, circle, fill=red!30, minimum size=1cm] at \negcharge {$+$};
+		\end{tikzpicture}
+	\end{center}
+	
+	\noindent We know that charge $2$ pushes charge $1$ to the left. If charge $2$ is fixed in place and charge $1$ is free to move, when charge $1$ is let go from rest, it will begin to move. Therefore, charge $1$ will gain kinetic energy. Since energy cannot be created, there must have been an electric potential energy between the two charges. Last chapter, we used the electric field to describe the mechanism that caused the electric force. This chapter, we will talk about a quantity called electric potential to describe the mechanism that causes electric potential energy.
+	
+	\begin{theorem}[Electric Potential]
+		The electric potential is a scalar. Electric potential is also called potential or voltage. The electric potential of a single charge is:
+		
+		$$
+		V = \frac{kq}{r} = \frac{1}{4\pi \epsilon_0} \frac{q}{r}
+		$$
+		
+		\noindent The electric potential of a group of charges is:
+		
+		$$
+		V = k \sigma_i \frac{q_i}{r_i} = \frac{1}{4\pi \epsilon_0} \sum_i \frac{q_i}{r_i}
+		$$
+	\end{theorem}
+	
+	\begin{example}
+		What is the electric potential at point $P$, located at the corner of the $0.0200m$ square?
+		
+		\begin{center}
+		\begin{tikzpicture}[scale=3.0, font=\footnotesize]
+			\coordinate (BL) at (0,0);  
+			\coordinate (TL) at (0,1);  
+			\coordinate (TR) at (1,1);    
+			\coordinate (BR) at (1,0);    
+			
+			\draw[dashed] (BL) rectangle (TR);
+
+			
+			\fill[red] (TL) circle (1.2pt)
+			node[left, xshift=-1pt]{\(-12.0 \times 10^{-5}\,\mathrm{C}\)};
+			\fill[red] (BL) circle (1.2pt)
+			node[left, xshift=-1pt]{\(-15.0 \times 10^{-5}\,\mathrm{C}\)};
+			\fill[blue] (BR) circle (1.2pt)
+			node[right, xshift=1pt]{\(+18.0 \times 10^{-5}\,\mathrm{C}\)};
+
+			\fill[black] (TR) circle (1.2pt)
+			node[above right]{\(P\)};
+		\end{tikzpicture}
+		 \end{center}
+	\end{example}
+	
+	\paragraph{Solution} Using trigonometry, we find that the diagonal length is $0.0283$cm. Therefore, the calculation is as follows:
+	
+	$$
+	V = k \left( \frac{-12 \cdot 10^{-5}}{0.0200} + \frac{-15.0 \cdot 10^{-5}}{0.0283} + \frac{18.0 \cdot 10^{-5}}{0.0200} \right) = -2.07 \cdot 10^7 V
+	$$
+	
+	\subsection{Electric Potential of a Line of Charge}
+	
+	\paragraph{Note} There are no official "theorems" or new things learned in this section. These derivations, however, will be tested on the AP exam. The intuition is helpful to understand regardless.
+	
+	\begin{example}
+	Prove that at point $P$, the electric potential is:
+	
+	$$
+	V = \frac{Q}{4 \pi \epsilon_0 L} \ln{\left( \frac{d+L}{d} \right)}
+	$$
+	\begin{center}
+		\begin{tikzpicture}[>=stealth, scale=1.6]
+			
+			% Point p
+			\node[left] at (0,0.1) {$p$};
+			\fill (0,0.1) circle (1pt);
+			
+			\draw (1,0) rectangle (5,0.2);
+			
+			\draw[<->] (0,-0.15) -- node[below] {$d$} (1,-0.15);
+			
+			\draw[<->] (1,-0.15) -- node[below] {$L$} (5,-0.15);
+			
+		\end{tikzpicture}
+	\end{center}
+	\end{example}
+	
+	\paragraph{Solution} We can use similar tactics as in charge distributions. We know that $\lambda = \frac{Q}{L} = \frac{dQ}{dx}$. Thus, $\lambda dx = dQ$.
+	
+	$$
+	\int dV = k \lambda \int_d^{d+L} \frac{1}{x}dx \implies V = k \lambda \left. \ln(x) \right|_d^{d+L} = \frac{Q}{4\pi \epsilon_0 L} \ln{\left( \frac{d+L}{d} \right)}
+	$$
+	
+	\begin{example}
+		Prove that at point $P$, $V = \frac{1}{4\pi \epsilon_0} \frac{Q}{R}$
+		\begin{center}
+			\begin{tikzpicture}[scale=2, line cap=round, line join=round]
+			
+				\coordinate (P) at (0,0);
+				
+			
+				\draw (60:1.5) arc[start angle=60, end angle=-60, radius=1.5];
+				\draw (60:1.45) arc[start angle=60, end angle=-60, radius=1.45];
+				
+				\draw (P) -- (1.8,0); 
+				
+				\draw[dotted] (P) -- (60:1.8);
+				\draw[dotted] (P) -- (-60:1.8);
+				
+				\node at (30:0.4) {$60^\circ$};
+				\node at (-30:0.4) {$60^\circ$};
+				
+				\node[below right] at (P) {$P$};
+				
+				\node at (30:1.0) {$R$};
+				\node at (-30:1.0) {$R$};
+				
+			\end{tikzpicture}
+		\end{center}
+	\end{example}
+
+	
+	\paragraph{Solution} Rather than using the mathematical solution for this problem, the canonical solution requires you to think about this problem intuitively. Each $dQ$ is a distance of $R$ meters away from $P$, and since $R$ is constant, we have:
+	
+	$$
+	V = k \frac{Q}{R} = \frac{1}{4\pi \epsilon_0} \frac{Q}{R}
+	$$
+	
+	\begin{example}
+		What is the potential at point $P$?
+		\begin{center}
+			\begin{tikzpicture}[scale=1.6, font=\large]
+				
+				\draw[thick] (0,0) ellipse [x radius=1.4, y radius=0.6];
+				
+				\coordinate (O) at (0,0);
+				\fill (O) circle (1pt);
+				
+				\coordinate (P) at (0,2);
+				\fill (P) circle (1pt);
+				\node[above] at (P) {$p$};
+				
+				\draw[dashed] (P) -- (O);
+				
+				\node[right] at ($(P)!0.5!(O)$) {$z$};
+				
+				\coordinate (A) at (1.4,0);
+				\draw[dashed] (O) -- (A);
+				\node[above] at ($(O)!0.5!(A)$) {$R$};
+			\end{tikzpicture}
+		\end{center}
+	\end{example}
+	
+	\paragraph{Solution} Let $r = \sqrt{z^2+R^2}$. Since the sum of every $dQ$ is $Q$, and every $dQ$ is a length of $r$ away from the the point, the potential is simply:
+	
+	$$
+	V = \frac{1}{4\pi \epsilon_0} \frac{Q}{r} = \frac{1}{4\pi \epsilon_0} \frac{Q}{\sqrt{R^2+z^2}}
+	$$
+	
+	\subsection{Electric Potential Energy and Work}
+	
+	\paragraph{Note} There is a difference between electric potential energy and electric potential. In this section, we will focus on electric potential energy.
+	
+	\begin{theorem}[Electric Potential Energy]
+		We can calculate the electric potential energy as follows:
+		
+		$$
+		U_E = qV = \frac{1}{4\pi \epsilon_0} \frac{q_1q_2}{r}
+		$$
+	\end{theorem}
+	
+	\begin{example}
+		How much electric potential energy does this charge configuration have?
+		\begin{center}
+			\begin{tikzpicture}[font=\small, >=Stealth]
+				
+				\def\dist{4}
+				\def\radius{0.7}
+				
+				\draw (0,0) circle (\radius);
+				\node at (0,0) {$-12.0\,\mu\text{C}$};
+				
+				\draw (\dist,0) circle (\radius);
+				\node at (\dist,0) {$-6.00\,\mu\text{C}$};
+				
+				\draw[dashed] (\radius,0) -- (\dist - \radius,0);
+				
+				\node[above] at (\dist/2,0) {$0.200\,\text{m}$};
+				
+			\end{tikzpicture}
+		\end{center}
+	\end{example}
+	
+	\paragraph{Solution} We can use the above formula:
+	
+	$$
+	U_E = k \frac{(-2 \cdot 10^{-6})(-6.00 \cdot 10^{-6})}{0.200} = 0.540 J
+	$$
+	
+	
+	\begin{theorem}[Work]
+		Assuming a particle begins and ends at rest, the work needed to move a charge from one area of potential to another is:
+		
+		$$
+		W_\text{app} = q \Delta V
+		$$
+		
+		\noindent The work done by the electric field during the same move is:
+		
+		$$
+		W_\text{field} = - W_\text{app}
+		$$
+	\end{theorem}
+	
+	\begin{example}
+		How much work is done to move a $+3.00 \mu C$ charge from $(8,0)$ to $(0,-5)$?
+	\end{example}
+	
+	\paragraph{Solution} We can use the theorem above:
+	
+	$$
+	\Delta V = V_f - V_i = k \left( \frac{-5 \cdot 10^{-6}}{5.00} - \frac{-5.00 \cdot 10^{-6} }{8.00}\right) = -9000 + 5625 = -3375
+	$$
+	
+	$$
+	W_\text{app} = 3 \cdot 10^{-6} \cdot -3375 = -0.0101 J
+	$$
+	
+	\begin{example}
+		How much work is needed to bring in a $+9.00 \mu C$ charge in from infinity to point $P$?
+		
+		\begin{center}
+			\begin{tikzpicture}[>=stealth,scale=3]
+				
+				% Coordinates
+				% Q1 at (0,0), Q2 at (0.2,0) and point p at (0.35,0).
+				\coordinate (Q1) at (0, 0);
+				\coordinate (Q2) at (2.0, 0);
+				\coordinate (P)  at (3.5, 0);
+				
+				% Draw the first charge (Q1)
+				\draw[fill=red] (Q1) circle (2pt)
+				node[above=2pt] {$-2.00\,\mu\mathrm{C}$};
+				
+				% Draw the second charge (Q2)
+				\draw[fill=red] (Q2) circle (2pt)
+				node[above=2pt] {$-6.00\,\mu\mathrm{C}$};
+				
+				% Draw the point p to the right
+				\draw (P) node[fill=black,circle,inner sep=1pt,label=above:$p$] {};
+				
+				% Distance labels
+				% Draw a line beneath Q1--Q2 to show 0.200 m
+				\draw[|-|] ($(Q1)-(0,0.1)$) -- ($(Q2)-(0,0.1)$)
+				node[midway,below] {$0.200\,\mathrm{m}$};
+				
+				% Draw a line beneath Q2--p to show 0.150 m
+				\draw[|-|] ($(Q2)-(0,0.1)$) -- ($(P)-(0,0.1)$)
+				node[midway,below] {$0.150\,\mathrm{m}$};
+				
+			\end{tikzpicture}
+		\end{center}
+	\end{example}
+	
+	\paragraph{Solution}
+	
+	
+	\newpage
+	
+	\section{Circuits}
+	
+	\subsection{Current Resistance, and Ohm's Law}
+	
+	\begin{theorem}[Electric Current]
+		Electric current is the rate of flow of charge through a circuit.
+		
+		$$
+		I = \frac{\Delta q}{\Delta t} = \frac{dQ}{dt} \text {   unit: $A$ Ampere}
+		$$
+	\end{theorem}
+	
+	\paragraph{Electric Current} So far, we have thought of current as being the flow of electrons. Before we knew about protons and electrons, however, a model for current was developed that defined current as the theoretical flow of positive charges through a circuit. This model, called "conventional current", is a model that we will use from now on. In the conventional current model, current always flows from an area of high potential to an area of low potential.
+	
+	\paragraph{Resistance} The flow of charge is not instantaneous. Charges take time to move from one area to another. Resistance is the opposition that a substance provides to the flow of charges. The units for resistance is ohms $\Omega$. All objects that have current flowing through them will provide resistance. Special devices called resistors provide a certain amount of resistance to a circuit. 
+	
+	\begin{theorem}[Resistance]
+		The resistance of an object can be found with the following equation:
+		$$
+		R = \frac{\rho l}{A}
+		$$
+		
+		\noindent where $\rho (\Omega m)$ is \textbf{resistivity}: the resistance to the flow of current from one end of a material to the other. $l$ is length (m). $A$ is the cross sectional area of the object $(m^2)$. 
+	\end{theorem}
+	
+	\begin{example}
+		A resistor is shaped like a cylinder. It has a radius of $0.005m$ and a length of $0.01m$. If the resistor has a labeled resistance of $1400 \Omega$, determine the resistivity of the material the resistor is made out of. 
+	\end{example}
+	
+	\paragraph{Solution} Using our resistance equation, we see
+	
+	$$
+	R = \frac{\rho l}{A} \implies 1400 = \frac{(\rho)(0.01)}{\pi (0.05^2)} \implies \boxed{\rho = 11.0 \Omega m }
+	$$
+	
+	\begin{theorem}[Ohm's Law]
+		$$\Delta V = IR$$
+		
+		\noindent where $I$ is the current of the resistor and $R$ is the resistance of the resistor.
+	\end{theorem}
+	
+	\begin{theorem}[Power of a Resistor]
+		The power of a resistor can be calculated as
+		
+		$$
+		P = I \Delta V \text{ unit: Watts (W)}
+		$$
+	\end{theorem}
+	
+	\subsection{Resistors in Series and Parallel}
+	
+	\paragraph{Series Circuit} A series circuit is one such that if current leaves the battery from the area of high potential, the current flows only in one path. In the example below, the current flows from $R_1$ to $R_2$ and then $R_3$.  All resistors in series have the same current flowing through them - the current from the battery. 
+	
+	\begin{figure}[ht]
+		\centering
+		\begin{circuitikz}[american]
+			\draw
+			(0,0) to[battery1, l_=$V$] (0,4)  % battery labeled V
+			to[R, l_=$R_3$] (3,4)            % resistor labeled R1
+			to[R, l_=$R_2$] (3,0)            % resistor labeled R2
+			to[R, l_=$R_1$] (0,0);           % resistor labeled R3
+		\end{circuitikz}
+		\caption{A circuit of resistors wired in series}
+		\label{fig:circuit}
+	\end{figure}
+	
+	\begin{theorem}[Kirchoff's Loop Rule]
+		The voltage through one loop of a circuit should add up to the voltage of the battery.
+		
+		$$
+		V_B = \sum_i V_i \text{ where $V_i$ is the voltage of one element in the loop of a circuit}
+		$$
+	\end{theorem}
+	
+	\begin{theorem}[Resistors in Series]
+		Resistors in series act as one resistor.
+		
+		$$
+		R_s = \sum_i R_i
+		$$
+	\end{theorem}
+	
+	
+	\paragraph{Parallel Circuit} A parallel circuit has multiple paths. Current leaves the battery and then has multiple branches or "choices" throughout the circuit. Due to Kirchoff's Loop Rule, each resistor in a parallel circuit have the same voltage across them - the voltage of the battery.
+	
+	\begin{figure}[ht]
+		\centering
+		\begin{circuitikz}[american]
+			\draw
+			(0,0) to[battery1, l_=$V$] (0,3)
+			-- (6,3)  
+			(0,0) -- (6,0);  
+			                   
+
+			\draw
+			(2,3) to[R, l_=$R_1$] (2,0)
+			(4,3) to[R, l_=$R_2$] (4,0)
+			(6,3) to[R, l_=$R_3$] (6,0);
+		\end{circuitikz}
+		\caption{Three parallel resistors connected to a battery.}
+		\label{fig:parallel-circuit}
+	\end{figure}
+	
+	\begin{theorem}[Junction Rule]
+		The current flowing into a junction is equal to the current flowing out of a junction.
+	\end{theorem}
+	
+	\begin{theorem}[Resistors in Parallel]
+		Resistors in parallel follow a harmonic mean pattern.
+		$$
+		\frac{1}{R_p} = \sum_i \frac{1}{R_i}
+		$$
+	\end{theorem}
+	
+	\begin{example}
+		Three resistors $(30 \Omega, 15 \Omega, 10 \Omega)$ are hooked up in parallel to a $30V$ battery.
+		\begin{enumerate}
+			\item  Find the equivalent resistance of the circuit
+			\item  Find the current that comes out of the battery
+			\item  Find the current that flows through each resistor
+			\item  Find the power dissipated through each resistor
+		\end{enumerate}
+	\end{example}
+	
+	\paragraph{Solution} The resistors in a parallel circuit follow a harmonic mean pattern. Thus, we have:
+	
+	$$
+	\frac{1}{R_p} = \frac{1}{30} + \frac{1}{15} + \frac{1}{10} = \frac{1}{5} \implies \boxed{R_p = 5 \Omega}
+	$$
+	
+	\noindent Now, to find the current coming out of the battery, we use Ohm's Law:
+	
+	$$
+	V_{battery} = I_{battery} R_p \implies 30 = I_{battery} (5) \implies \boxed{I_{battery} = 6 A}
+	$$ \\ 
+	
+	\noindent Each resistor has $30V$ passing through it, as each resistor is independently touching the battery. For the current that flows through each resistor, we use Ohm's law again:
+	
+	$$
+	30\Omega : 30 = I(30) \implies \boxed{I = 1.0 A}
+	$$
+	
+	$$
+	15 \Omega: 30 = I(15) \implies \boxed{I = 2.0A}
+	$$
+	
+	$$
+	10 \Omega: 30 = I(10) \implies \boxed{I = 3.0A}
+	$$
+	
+	\noindent We use these values to calculate the power through each resistor:
+	
+	$$
+	30 \Omega: P = (1.0)(30) = \boxed{30.0 W}
+	$$
+	
+	$$
+	15 \Omega: P = (2.0)(30) = \boxed{60.0 W}
+	$$
+	
+	$$
+	10 \Omega: P = (3.0)(30) = \boxed{90.0 W}
+	$$
+	
+	\begin{example}
+		A $25 \Omega$ resistor and a $5 \Omega$ resistor are hooked up to a $12V$ battery in series. 
+		\begin{enumerate}
+			\item Find the equivalent resistance
+			\item Find the current through each resistor
+			\item Find the voltage across each resistor
+		\end{enumerate}
+	\end{example}
+	
+	\paragraph{Solution} To find the equivalent resistance, we do:
+	
+	$$
+	R_s = 25 + 5 = \boxed{30 \Omega}
+	$$
+	
+	\noindent Next, to find the current through each resistor, we must remember that resistors in series get the full amount of current from the battery.
+	
+	$$
+	V_{battery} = I_{battery} R_s \implies 12 = I_{battery} (30) \implies \boxed{I_{battery} = 0.400 A}
+	$$
+	
+	\noindent Finally, to find the voltage across each resistor, we have:
+	
+	$$
+	25 \Omega: V = (0.400)(25.0) = \boxed{10.0V} 
+	$$
+	
+	$$
+	5 \Omega: V = (0.400)(5.00) = \boxed{2.0 V}
+	$$	
+	
+	\subsection{Combination Circuits}
+	
+	\paragraph{Combination Circuit} A combination circuit is a circuit that has a mix of both parallel and series circuits inside of it.
+
+	\paragraph{This Section Is Incomplete}
+	
+	\subsection{Kirchhoff's Rules for More Complicated Circuits}
+	
+	\begin{theorem}[Kirchhoff's Rules]
+		There are two main rules that can be explored.
+		\begin{enumerate}
+			\item \textbf{Junction Rule: } The current flowing into a junction is equal to the current flowing out of a junction (via law of conservation of charge).
+			
+			\item \textbf{Loop Rule:} When a complete loop is made around a circuit, the sum of the voltage gains and the voltage drops equals zero.
+		\end{enumerate}
+	\end{theorem}
+	
+	\paragraph{Voltage Gain vs Loss} If the loop through the circuit travels from low potential to high potential, it is considered a voltage gain, which is positive. If the loop through the circuit travels from high potential to low potential, it is considered a voltage drop, which is negative.
+	
+	\begin{center}
+	
+\begin{circuitikz}[font=\scriptsize]
+	% Define the junctions:
+	\coordinate (A) at (0,2);   % Left top
+	\coordinate (B) at (2,2);   % Next along top branch
+	\coordinate (C) at (4,2);   % Top left of right rectangle
+	\coordinate (D) at (6,2);   % Top right of right rectangle
+	\coordinate (E) at (0,0);   % Left bottom
+	\coordinate (F) at (4,0);   % Bottom left of right rectangle (directly below C)
+	\coordinate (G) at (6,0);   % Bottom right of right rectangle (directly below D)
+	
+	% Top branch components:
+	\draw (A) to[R=$10\,\Omega$] (B)
+	to[battery, l=$6\,\mathrm{V}$] (C)
+	to[R=$5\,\Omega$] (D);
+	
+	% Bottom branch component:
+	\draw (E) to[R=$9\,\Omega$] (G);
+	
+	% Vertical connections:
+	\draw (A) to[battery, l_=$4\,\mathrm{V}$] (E);
+	\draw (C) to[R=$7\,\Omega$] (F);
+	\draw (D) to[battery, l_=$9\,\mathrm{V}$] (G);
+	
+	% Horizontal line to complete the rectangle on the right:
+	\draw (F) -- (G);
+	
+	% Label the junctions:
+	\node at (A) [above left]   {A};
+	\node at (C) [above]        {B};
+	\node at (D) [above right]  {C};
+	\node at (E) [below left]   {F};
+	\node at (F) [below]        {E};
+	\node at (G) [below right]  {D};
+\end{circuitikz}
+
+	
+	\begin{theorem}[Steps for Solving]
+		Use the following steps for Kirchhoff's Rule in complicated circuits:
+		\begin{enumerate}
+			\item Label the corners and intersections (junctions) of the circuit using letters.
+			\item Predict the direction of the current through each branch of the circuit. 
+			\item Label the areas of high potential and low potential through each resistor
+			\item Use the junction rule to write a unique equation for each junction of the circuit 
+			\item Use the loop rule to write the necessary equations for as many loops around the circuit as necessary.
+			\item Solve for each current using a matrix.
+		\end{enumerate}
+	\end{theorem}
+	
+	
+	\begin{flushleft}
+	\item \paragraph{Solving the problem above} We can reasonably predict that the current flowing out of the 9V battery and the 4V battery will overpower the opposing 6V battery. Therefore, we have a current $I_1$ goes from EF to FA and then to AB. We have reason to guess that it'll also go from BC to CD and then DE. We will call this current $I_3$. $I_2$ goes up through EB. Current flows from high potential to low potential, so we can label high and low for each current arrow respectively. Next, we can create the following equations using the junction rule and the loop rule with constant voltage:
+	
+	$$
+	\begin{cases}
+		I_1 + I_2 + 0I_3 = 3 \\
+		-19 I_1  + 7I_2 + 0I_3 = 2 \\	
+		0I_1 - 7I_2 - 5I_3 = -9
+	\end{cases} \xrightarrow{\text{to matrix}} \begin{bmatrix} 1 & 1 & 0 & 3 \\ -19 & 7 & 0 & 2 \\ 0 & -7 & -5 & -9 \end{bmatrix} \xrightarrow{RREF} \begin{bmatrix} 1 & 0 & 0 & 0.148 \\ 0 & 1 & 0 & 0.688 \\ 0 & 0 & 1 & 0.837 \end{bmatrix}
+	$$
+	
+	\noindent Therefore, we have the following solutions to the current:
+	
+	$$
+	\begin{cases}
+		I_1 = 0.148 A \\ I_2 = 0.688 A \\ I_3 = 0.837 A
+	\end{cases}
+	$$
+	\end{flushleft}
+	\end{center}
+	
+	\subsection{Capacitors in Series and Parallel}
+	
+	\paragraph{Capacitors in Series} Capacitors in series all have the same charge. The loop and junction rules still apply, so the sum of the potential across each capacitor will sum to the potential of the battery.
+	
+	\begin{theorem}[Equivalent Capacitance for Capacitors in Series]
+		Like resistors, we can take many capacitors and treat them as one capacitor. The equivalent capacitance for capacitors in series is as follows:
+		
+		$$
+		\frac{1}{C_s} = \sum_i \frac{1}{C_i}
+		$$
+	\end{theorem}
+	
+	\paragraph{Capacitors in Parallel} Capacitors in parallel have the same voltage - the voltage of the battery. The sum of the charge across each capacitor is equal to the total charge coming from the battery.
+	
+	\begin{theorem}[Equivalent Capacitance for Capacitors in Parallel]
+		The equivalent capacitance for capacitors in parallel is as follows:
+		$$
+		C_p = \sum_i C_i
+		$$
+	\end{theorem}
+	
+	\begin{example}
+		You have three capacitors of capacitance $1200 \mu F$, $400 \mu F$, and $600 \mu F$ wired in series and connected to a $9.0V$ battery. Determine the equivalent capacitance and how much charge is stored in each.
+	\end{example}
+	
+	\paragraph{Solution} The equivalent capacitance is calculated as follows:
+	
+	$$
+	\frac{1}{C_s} = \frac{1}{600 \mu F} + \frac{1}{400 \mu F} + \frac{1}{1200 \mu F} \implies C_s = \boxed{200 \mu F}
+	$$
+	
+	\noindent The formula $q = CV$ can be applied directly to determine the charge:
+	
+	$$
+	(200 \cdot 10^{-6})(9.00) = \boxed{0.0018 C}
+	$$
+	
+	\noindent Each capacitor has the total charge coming from the battery stored in it.
+	
+	\begin{example}
+		You have three capacitors wired in parallel with capacitances of $400 \mu F$, $600 \mu F$, and $1200 \mu F$ and are connected to a $9.0V$ battery. Determine the equivalent capacitance and how much charge is stored in each if they are wired in parallel.
+	\end{example}
+	
+	\paragraph{Solution} The equivalent capacitance can be calculated as follows:
+	
+	$$
+	C_p = 400 \mu F + 600 \mu F + 1200 \mu F = \boxed{2200 \mu F}
+	$$
+	
+	\noindent Each capacitor has the voltage of the battery across it. Therefore, we have the following:
+	
+	\begin{itemize}
+		\item \textbf{$400 \mu F:$} $(400 \cdot 10^{-6})(9.00) = \boxed{0.0036C}$
+		\item \textbf{$6600 \mu F:$} $(600 \cdot 10^{-6})(9.00) = \boxed{0.0054C}$
+		\item \textbf{$1200 \mu F:$} $(1200 \cdot 10^{-6})(9.00) = \boxed{0.0108C}$
+	\end{itemize}
+	
+	\subsection{Capacitors in Combination}
+	
+	To do $\hdots$
+	
+	\subsection{RC Circuits} 
+	
+	RC circuits are circuits that have both resistors and capacitors in them. The most basic example is as follows:
+	
+	\begin{center}
+	\begin{circuitikz}[american, scale=0.8]
+		\draw
+		(0,0) to[battery1, l_=$V$] (0,4)
+		-- (3,4) to[switch] (4,4)
+		to[R=$R$] (6,4)
+		to[C=$C$] (6,0)
+		-- (0,0);
+	\end{circuitikz}
+	\end{center}
+	
+	\noindent After the switch is closed, the current begins to flow. As time goes on, the current gets smaller and smaller. When the switch is first closed, the circuit acts as if the capacitor is not in the circuit. The initial current through the circuit, $I_0$, can therefore be found using Ohm's Law. 
+	
+	$$
+	I_0 = \frac{V}{R} 	
+	$$
+	
+	\begin{theorem}[Charge in Capacitor]
+		The charge in the capacitor of the circuit above, $Q$, can be found using the following equation:
+		
+		$$
+		Q = CV \left( 1 - e^{\frac{-t}{RC}} \right)
+		$$
+	\end{theorem}
+	
+	\noindent Intuitively, this theorem makes a lot of sense. When no time has elapsed, the capacitor remains uncharged. However, as time goes to infinity, you get $e$ to an infinitely large negative exponent. As $t \to \infty$, $Q$ approaches $CV$.
+	
+	\begin{theorem}[Voltage Across Capacitor]
+		The voltage across the capacitor, $V_C$, can be found with the following equation:
+		
+		$$
+		V_c = V \left( 1 - e^{\frac{-t}{RC}} \right)
+		$$
+	\end{theorem}
+	
+	\noindent You can derive this formula by using $V = \frac{Q}{C}$ alongside the formula for the charge in a capacitor. Using the same intuition as the previous formula, this makes sense as well.
+	
+	\begin{theorem}[Current Flowing Through Circuit]
+		The current flowing through the circuit, $I$, can be found with the following equation:
+		
+		$$
+		I = \frac{dQ}{dt} = \frac{V}{R} e^{-\frac{t}{RC}} = I_0 e^{-\frac{t}{RC}}
+		$$
+	\end{theorem}
+	
+	\noindent In the above equations, $RC$ is sometimes called the time constant and is represented with the Greek letter Tau $(\tau)$. Therefore, $\tau = RC$ \text{ seconds}. 
+	
+	\paragraph{Modified Scenario} Let's say that the switch is opened and the battery is now taken out of the circuit. If the switch is then closed, the capacitor will discharge itself from the initial charge of $Q_0$ and initial voltage $V$. The current flows in the opposite direction of the charging current with an initial current $I_0$.
+	
+	\begin{theorem}[Charge Without Battery]
+		The charge of the capacitor in this new, modified scenario, $Q$, can be found with the following equation:
+		
+		$$
+		Q = Q_0 e^{-\frac{t}{RC}}
+		$$
+	\end{theorem}
+	
+	\begin{theorem}[Voltage Without Battery]
+		Under the same conditions as the previous theorem, the voltage across the capacitor, $V_c$, can be found with the following equation:
+		
+		$$
+		V_c = V e^{-\frac{t}{RC}}
+		$$
+	\end{theorem}
+	
+	\begin{theorem}[Current Without Battery]
+		The current through the circuit, $I$, can be found with the following equation:
+		
+		$$
+		I = \frac{dQ}{dt} = \frac{V}{R} e^{-\frac{t}{RC}} = I_0 e^{-\frac{t}{RC}}
+		$$
+	\end{theorem}
+	
+	\noindent Think about these equations and why they occur. Notice that after the battery is detached, each equation turns into exponential decay rather logistic growth.
+	
+	\newpage
+	
+	\section{Magnetism}
+	
+	\subsection{Magnetic Field Created by a Current Carrying Wire (Adapted from \href{https://physicsclassroom.com}{here})}
+	
+	\paragraph{The "Field-Finding" Right Hand Rule} Physicists use arrows to show the direction of current in a wire. Imagine an arrow that is shot from the bow of an archer. If the arrow was traveling away from him, he'd see the feathers. If it was traveling toward him, he'd see the arrow head. We use the $B$ variable to represent the magnetic field. The right hand rule works as follows:
+	
+	\begin{enumerate}
+		\item Using your right hand, point your thumb in the direction of the current
+		\item The fingers of your right hand will automatically curl around the wire in the direction of the $B$ field. 
+	\end{enumerate}
+	
+	\begin{theorem}[Ampere's Law]
+		To calculate the magnetic field strength for long, straight wire, we can use the following equation:
+		
+		$$
+		B = \frac{\mu_0 I}{2 \pi r} \quad \text{T(Teslas)}
+		$$
+		
+		\noindent where $I$ is the current measured in $A$, $r$ is the distance from wire to point where finding the magnetic field, and $\mu_0$ is the permeability of free space.
+	\end{theorem}
+	
+	\begin{example}
+		Determine the magnitude and direction of the magnetic field at a point $P$ located $20.0 cm$ above a long wire carrying $3.0 A$ of current to the left.
+	\end{example}
+	
+	\paragraph{Solution} Using the right-hand rule, we see that the magnetic field will point into the page. We can denote this using $X$. The magnitude can be calculated using Ampere's Law:
+	
+	$$
+	B = \frac{(4 \pi \cdot 10^{-7})(3.0)}{2 \pi (0.200)} = 1.0 \mu T
+	$$
+	
+	\begin{example}
+		Determine the magnitude and direction of the magnetic field at point $P$ located $10.0cm$ above the midpoint of two parallel current carrying wires that are $20.0cm$ apart. Assume each wire carries $5.0A$ of current in the direction shown.
+		\begin{center}
+		\begin{tikzpicture}[scale=0.2]
+			\draw[step=1.0, gray!50, thin] (-11,-1) grid (11,11);
+		
+			\draw[thick,->] (-11,0) -- (11,0) node[right]{};
+			\draw[thick,->] (0,-1)  -- (0,11) node[above]{};
+			
+
+			\draw[blue] (-10,0) node {\LARGE $\times$};
+			\draw[red]  (10,0)  node {\LARGE $\times$};
+			
+
+			\node[blue, below] at (-10,0) {\small $(-10,0)$};
+			\node[red,  below] at (10,0)  {\small $(10,0)$};
+			
+			\filldraw[black] (0,10) circle (3pt);
+			\node[above] at (0,10) {\small $P=(0,10)$};
+		\end{tikzpicture}
+		\end{center}
+	\end{example}
+	
+	\paragraph{Solution} We need to find the magnitude and direction of the $B$-field at point $P$ due to each wire and then add these like vectors. Pythagorean theorem tells us that the distance from the magnitude field to point $P$ is $14.1cm$. The magnetic fields are identical and can be calculated as follows:
+	
+	$$
+	B = \frac{(4 \pi \cdot 10^{-7})(5.0)}{2 \pi (0.141)} = 70.9 \mu T
+	$$
+	
+	\noindent The $y$ components of the magnetic field cancel out, so we find the $x$-component of each to be $70.9\cos 45^\circ = 50.1$. Thus, by vector addition, the total magnetic field is $100.2 \mu T$ to the right.
+	
+	\subsection{Biot-Savart Law}
+	
+	The \textbf{Biot-Savart Law} quantitatively relates a steady current element to the magnetic field it produces at a point in space. It is an integral law that expresses the magnetic field as a vector sum of infinitesimal contributions from each segment of a current-carrying conductor. 
+	
+	\begin{theorem}[Biot-Savart Law]
+		The change in the magnetic field, $d\vec{B}$, can be calculated as follows:
+		
+		$$
+		d\vec{B} = \frac{\mu}{4\pi} \cdot \frac{I(d \vec{l} \times r)}{r^2}
+		$$
+	\end{theorem}
+	
+	\paragraph{Biot-Savart Law for a Long Wire} We can use Biot-Savart's Law to derive the formula used above in Ampere's Law. Consider the following graph:
+	
+	\begin{center}
+	\begin{tikzpicture}[>=stealth]
+		\draw[thick, green] (-5,0) -- (5,0);
+		
+		\node[left]  at (-5,0) {$-\infty$};
+		\node[right] at ( 5,0) {$\infty$};
+		
+		\draw[->, thick, teal] (-2,0.3) -- (-1,0.3);
+		
+		\node at (0,1.5) {\large P};
+		
+	\end{tikzpicture}
+	\end{center}
+	
+	\noindent The magnetic field will point into the page. Let the altitude drawn from $P$ to the line be $a$. The length from the point on the wire to $P$ is $r$. There is a unit vector, $\vec{r}$, that points toward $P$. We can take an arbitrarily small part of the current, say $dx$. Recall that $A \times B = AB \sin \theta$. Thus, we have:
+	
+	$$
+	dx \times \vec{r} = dx \sin \theta 
+	$$
+	
+	\noindent Using trig, we see that $\sin \theta = \frac{a}{r}$ and $r = \sqrt{a^2 + x^2}$. Thus, $\sin \theta = \frac{a}{\sqrt{x^2+a^2}}$. Let's substitute that into our formula for the cross product and then again into the Biot-Savart Law:
+	
+	$$
+	dx \times \vec{r} = \frac{a}{\sqrt{a^2+x^2}} dx \implies d\vec{B} = \frac{\mu_0 I a}{4 \pi} \cdot \frac{dx}{\left(x^2+a^2\right)^\frac{3}{2}}
+	$$
+	
+	$$
+	\int d\vec{B} = \frac{\mu_0 I a}{4 \pi} \cdot 2 \int_0^\infty \frac{dx}{(x^2+a^2)^\frac{3}{2}} = \frac{2\mu_0 I a}{4 \pi} \cdot 
+	\left. \left( \frac{x}{a^2\sqrt{x^2+a^2}} \right)\right|_0^\infty =  \frac{\mu_0 I a}{2 \pi}
+	$$
+	
+	\paragraph{Biot-Savart's Law for an Arc} Again, the Biot-Savart's Law, we must first find $dx \times \vec{r}$. Since $dx \times \vec{r} = dx r \sin \theta$, we also need $\sin \theta$. In the case of a circular arc, $\sin \theta = 1$, and $\vec{r}$ is the unit vector. Thus $dx \times \vec{r} = dx$. We must integrate over the entire arc length. Thus, we have
+	
+	$$
+	\int d \vec{B}= \frac{\mu_0 I}{4 \pi r^2} \int_0^{r \theta} dx = \frac{\mu_0 I \theta}{4 \pi R}
+	$$
+	
+	\noindent Where $R$ is the distance from the point to each point on the arc.
+	
+	\subsection{Ampere's Law}	
+	
+	\begin{theorem}
+		Ampere's Law is used to find the magnetic field in wires. It is calculated as follows:
+		
+		$$
+		\oint B \cdot dl = \mu_0 I_\text{enc}
+		$$
+	\end{theorem}
+	
+	\begin{example}
+			Use Ampere's Law to find the magnetic field at any point $R$ meters away from a wire that has current flowing out of the page.
+	\end{example}
+	
+	\paragraph{Solution} We can construct an Amperian loop of radius $R$ that encloses the entire current. Thus, we have:
+	
+	$$
+	\oint B \cdot dl = \mu I_\text{enc} \implies B \int_0^{2\pi R} dl = \mu_0 I \implies B(2\pi R) = \mu_0 I \implies B = \frac{\mu_o I}{2 \pi R}
+	$$
+	
+	\noindent We have yet again derived the equation for the magnetic field caused by a current carrying wire.
+	
+	\begin{example}
+		A long, cylindrical conductor of radius $a$ has current $i$ flowing down it and out of the page. Determine $B(r)$ at $r < a$ and $r > a$.
+	\end{example}
+	
+	\paragraph{Solution} Inside of the wire, we have a current density $\sigma = \frac{i}{\pi a^2} = \frac{I_\text{enc}}{\pi r^2}$. Rearranging this gives us $I_\text{enc} = \frac{ir^2}{a^2}$. Then, we have:
+	
+	$$
+	\oint B \cdot dl = \mu I_\text{enc} \implies B \int_0^{2\pi r} dl = \mu_0 \frac{ir^2}{a^2} \implies B(2\pi r) = \mu_0 \frac{ir^2}{a^2} \implies B = \frac{\mu_0 ir}{2\pi a^2}
+	$$
+	 	
+\end{document}
